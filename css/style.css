@@ -1,0 +1,147 @@
+/* Normalization */
+
+body, ul, h1, h2, p {
+  margin: 0;
+}
+
+img {
+  border: 0;
+}
+
+/* Global */
+
+html {
+  font-family: 'freight-sans-pro', sans-serif;
+  color: #222;
+}
+
+body {
+  background: url('../images/textures/gray_jean.png');
+}
+
+header, article, footer {
+  position: relative;
+  margin: 0 auto;
+  width: 960px;
+}
+
+a {
+  color: #555;
+  text-decoration: none;
+}
+
+/* Image replacement */
+
+.social-media a, .books a {
+  display: inline-block;
+  text-indent: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  background-repeat: no-repeat;
+}
+
+/* Header */
+
+.header-wrapper {
+  background: white;
+}
+
+h1 {
+  font-size: 1.7em;
+  padding: 16px 0;
+}
+
+.social-media {
+  position: absolute;
+  top: 16px;
+  right: 0;
+}
+
+.social-media li {
+  display: inline-block;
+  list-style: none;
+  margin-left: 6px;
+}
+
+.social-media a {
+  background: url('../images/icons/social media icons.svg');
+  width: 29px;
+  height: 30px;
+}
+
+.social-media .twitter {
+  background-position: -29px 0;
+}
+
+.social-media .facebook {
+  background-position: -58px 0;
+}
+
+/* Main content */
+
+article {
+  padding: 96px 16px;
+}
+
+article p {
+  text-align: center;
+}
+
+h2 {
+  color: #111;
+  margin: 0 0 16px 0;
+}
+
+.about {
+  font-size: 22px;
+  margin: 32px 0;
+}
+
+.books {
+  padding: 16px 0 48px;
+  text-align: center;
+}
+
+.books li {
+  display: inline-block;
+  list-style: none;
+  margin: 0 25px;
+}
+
+.books li:first-child {
+  margin-left: 0;
+}
+
+.books li:last-child {
+  margin-right: 0;
+}
+
+.books a {
+  width: 260px;
+  height: 312px;
+  background-size: contain;
+}
+
+.books .coffeescript {
+  background-image: url('../images/CoffeeScript book cover.jpg');
+}
+
+.books .async-javascript {
+  background-image: url('../images/Async JavaScript book cover.jpg');
+}
+
+.books .npm {
+  background-image: url('../images/npm book cover.jpg');
+}
+
+.speaking li {
+  list-style: none;
+  margin: 8px 0;
+}
+
+/* Footer */
+
+footer p {
+  font-size: 12px;
+  margin: 16px 0;
+}
