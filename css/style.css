@@ -11,12 +11,17 @@ img {
 /* Global */
 
 html {
-  font-family: 'freight-sans-pro', sans-serif;
+  /*font-family: 'adelle', sans-serif;*/
+  font-family: 'ff-tisa-web-pro', serif;
   color: #222;
 }
 
+h1, h2 {
+  font-family: 'freight-sans-pro', sans-serif;
+}
+
 body {
-  background: url('../images/textures/gray_jean.png');
+  background: url('../images/textures/ecailles.png');
 }
 
 header, article, footer {
@@ -44,11 +49,12 @@ a {
 
 .header-wrapper {
   background: white;
+  border-bottom: 1px solid #ccc;
 }
 
 h1 {
-  font-size: 1.7em;
-  padding: 16px 0;
+  font-size: 2em;
+  padding: 10px 0;
 }
 
 .social-media {
@@ -80,7 +86,7 @@ h1 {
 /* Main content */
 
 article {
-  padding: 96px 16px;
+  padding: 48px 16px;
 }
 
 article p {
@@ -88,7 +94,7 @@ article p {
 }
 
 h2 {
-  color: #111;
+  font-size: 1.8em;
   margin: 0 0 16px 0;
 }
 
