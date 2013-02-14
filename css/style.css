@@ -112,6 +112,7 @@ h2 {
   display: inline-block;
   list-style: none;
   margin: 0 25px;
+  border: 1px solid #ccc;
 }
 
 .books li:first-child {
