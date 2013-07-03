@@ -1,0 +1,818 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>My Year of Git</title>
+
+		<meta name="description" content="My Year of Git">
+		<meta name="author" content="Trevor Burnham">
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<link rel="stylesheet" href="css/reveal.min.css">
+		<link rel="stylesheet" href="css/theme/default.css" id="theme">
+
+		<!-- For syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- If the query includes 'print-pdf', use the PDF print sheet -->
+		<script>
+			document.write( '<link rel="stylesheet" href="css/print/' + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">' );
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<div class="slides">
+				<section>
+					<h1>Everything I've Learned About Git<br>in the Last Year</h1>
+					<h3>(So You Don't Have To)</h3>
+					<p>
+						<small><a href="https://trevorburnham.com">Trevor Burnham</a> / <a href="https://twitter.com/trevorburnham">@trevorburnham</a></small>
+					</p>
+				</section>
+
+				<section id="intro">
+					<section>
+						<h2>The Theme of This Talk</h2>
+						<ul>
+							<li>Git is <strong>wonderful</strong>.</li>
+							<li class="fragment">Unfortunately, Git doesn't like you.</li>
+							<ul>
+								<li class="fragment">Git’s command names are lies.</li>
+								<li class="fragment">Its output is cold and unfeeling.</li>
+								<li class="fragment">And have you read those man pages? <img src="images/Manpage.png" alt="git help reset"></li>
+							</ul>
+						</ul>
+					</section>
+
+					<section>
+						<h2>The Theme of This Talk</h2>
+						<ul>
+							<li>Fortunately, I like you!</li>
+							<li class="fragment">And I know, like, 20% of git.</li>
+							<li class="fragment">This will be an infodump.</li>
+						</ul>
+					</section>
+
+					<section>
+						<h2>Git Wants You to Fight It</h2>
+						<img src="images/Fighting.jpg" alt="Fighting Ponies">
+					</section>
+
+					<section>
+						<h2>But You Can Be Friends!</h2>
+						<img src="images/Love.png" alt="Love Git">
+					</section>
+
+					<section>
+						<h2>How?</h2>
+						<ol>
+							<li class="fragment">Use good tools.</li>
+							<li class="fragment">Understand Git’s fundamental concepts.</li>
+							<li class="fragment">Know what every command you run actually does.</li>
+						</ul>
+					</section>
+				</section>
+
+				<section id="setting-up">
+					<section>
+						<h2>Setting Up</h2>
+						<img src="images/Yak-Shaving.jpg" alt="Let's make sure our yaks are shaved">
+					</section>
+
+					<section>
+						<h2>Install the Latest</h2>
+						<pre><code data-trim contenteditable class="bash">
+$ brew update
+$ brew upgrade git
+						</code></pre>
+
+						<div class="fragment">
+							<p>
+							Yes, <a href="https://github.com/defunkt/hub">hub</a> will wrap around the new version:
+							</p>
+							<pre><code data-trim contenteditable class="bash">
+$ hub --version
+git version 1.8.3.2
+hub version 1.10.6
+							</code></pre>
+						</div>
+					</section>
+
+					<section>
+						<h2>Git-ify Your Shell Prompt</h2>
+						<img src="images/Shell.png" alt="branch name, * when dirty">
+					</section>
+
+					<section>
+						<h2>Set Your Editor</h2>
+						<pre><code data-trim contenteditable class="ini">
+# ~/.gitconfig
+[core]
+	editor = subl -w
+						</code></pre>
+						<ul>
+							<li class="fragment">Classy way:<br><code>git config --global core.editor "subl -w"</code></li>
+							<li class="fragment">Alternatively, you can set your shell's <code>GIT_EDITOR</code>.</li>
+							<li class="fragment">Or just <code>EDITOR</code>.</li>
+							<li class="fragment"><code>subl</code> needs the <code>-w</code> flag to block Git until you close the tab.</li>
+						</ul>
+					</section>
+
+					<section>
+						<h2>Use Your Freedom of Choice</h2>
+						<img src="images/Freedom-of-Choice.jpg" alt="Devo's 'Freedom of Choice' album cover">
+					</section>
+
+					<section>
+						<h2>Get a Git Gutter</h2>
+						<img src="images/Git-Gutter.png" alt="Git Gutter in Sublime Text">
+						<p><a href="https://github.com/jisaacks/GitGutter">https://github.com/jisaacks/GitGutter</a></p>
+					</section>
+
+					<section>
+						<h2>Run (Some) Git Commands</h2>
+						<img src="images/Sublime-Git.png" alt="Git Gutter in Sublime Text">
+						<p><a href="https://sublimegit.net/">https://sublimegit.net/</a></p>
+					</section>
+
+					<section>
+						<h2>Configuring Git</h2>
+						<ul>
+							<li>The settings in a repo's <code>.git/config</code> override those in <code>~/.gitconfig</code> when you're in that repo.</li>
+							<li class="fragment">You can see all applicable settings with<br><code>git config --list</code>.</li>
+							<li class="fragment"><code>git config namespace.key value</code> sets a value in <code>.git/config</code>.</li>
+							<li class="fragment">Add the <code>--global</code> flag to modify <code>~/.gitconfig</code> instead.</li>
+						</ul>
+					</section>
+
+					<section>
+						<h2>Example: Setting Your Name and Email</h2>
+						<pre><code data-trim contenteditable class="bash">
+$ git config --global user.name "Your Name"
+$ git config --global user.name "you@hubspot.com"  # public!
+						</code></pre>
+						<p class="fragment"><a href="https://help.github.com/articles/keeping-your-email-address-private">https://help.github.com/articles/keeping-your-email-address-private</a></p>
+					</section>
+
+					<section>
+						<h2>Example: Adding a Global Gitignore</h2>
+						<pre><code data-trim contenteditable class="bash">
+# ~/.gitignore_global
+.DS_Store
+						</code></pre>
+						<pre><code data-trim contenteditable class="bash">
+$ git config --global core.excludesfile ~/.gitignore_global
+						</code></pre>
+						<p class="fragment"><a href="https://help.github.com/articles/ignoring-files">https://help.github.com/articles/ignoring-files</a></p>
+					</section>
+
+					<section>
+						<h2>Example: Setting an Alias</h2>
+						<pre><code data-trim contenteditable class="bash">
+$ git config --global alias.unstage "reset HEAD"
+						</code></pre>
+						<pre><code data-trim contenteditable class="bash">
+$ git unstage some_file  # git reset HEAD some_file
+						</code></pre>
+					</section>
+				</section>
+
+				<section>
+					<section>
+						<h2>History of Git</h2>
+						<pre><code data-trim contenteditable class="bash">
+$ git log --full-history --reverse
+						</code></pre>
+						<img src="images/Wat.jpg" alt="Wat?" class="fragment">
+					</section>
+
+					<section>
+						<h2>Version Control for Linux</h2>
+						<img src="images/Linus.jpg" alt="Linus 'Peanuts' Torvalds">
+					</section>
+
+					<section>
+						<h2>First Commit</h2>
+						<pre>
+commit e83c5163316f89bfbde7d9ab23ca2e25604af29
+Author: Linus Torvalds &lt;torvalds@ppc970.osdl.org&gt;
+Date: Thu Apr 7 15:13:13 2005 -0700
+Initial revision of "git", the information manager from hell
+						</pre>
+					</section>
+
+					<section>
+						<h2>Totally Distributed</h2>
+						<img src="images/Distributed.png" alt="Distributed network">
+					</section>
+
+					<section>
+						<h2>Git vs. Mercurial</h2>
+						<img src="images/Git-vs-Mercurial.jpg" alt="Git and Mercurial commands compared">
+					</section>
+
+					<section>
+						<h2>Why Git Won</h2>
+						<img src="images/Octocat.png" alt="GitHub">
+					</section>
+
+					<section>
+						<img src="images/BitBucket-Problems.jpg" alt="I got 99 problems, but at least I don't have to use BitBucket">
+					</section>
+				</section>
+
+				<section>
+					<section>
+						<h2>So&hellip;What is Git?</h2>
+						<img src="images/Git-Diagram.png" alt="Git diagram">
+					</section>
+
+					<section>
+						<h2>It's All About the Commits</h2>
+						<img src="images/Commit.png" alt="git show --pretty=raw &lt;commit&gt;">
+						<p class="fragment">Get to know <code>git show</code>.</p>
+					</section>
+
+					<section>
+						<h2>One Hash Unlocks the Entire Universe!</h2>
+						<img src="images/Hashcapades.jpeg" alt="Hashcapades: The art of the perfect hash adventure">
+					</section>
+
+					<section>
+						<h2>Can't Hashes Conflict?</h2>
+						<blockquote cite="http://git-scm.com/book/en/Git-Tools-Revision-Selection">
+							<p>
+								&ldquo;A higher probability exists that every member of your programming team will be attacked and killed by wolves in unrelated incidents on the same night.&rdquo;
+							</p>
+							<p class="attribution">
+								—<a href="http://git-scm.com/book/">Pro Git</a>
+							</p>
+						</blockquote>
+					</section>
+
+					<section>
+						<h2>What's a Branch?</h2>
+						<blockquote class="center">
+							<p>
+								&ldquo;A branch is just a pointer to a commit.&rdquo;
+							</p>
+						</blockquote>
+					</section>
+
+					<section>
+						<h2>Huh! Then What's a Tag?</h2>
+						<blockquote class="center">
+							<p>
+								&ldquo;A tag is just a pointer to a commit.&rdquo;
+							</p>
+						</blockquote>
+					</section>
+
+					<section>
+						<h2>Why Use Branches?</h2>
+						<img src="images/Branch-Names.png" alt="Branch names tell you what you're supposed to be working on">
+					</section>
+
+					<section>
+						<h2>What is the HEAD?</h2>
+						<img src="images/Record-Head.jpg" alt="Put the HEAD on the part of the record you want to play">
+					</section>
+
+					<section>
+						<h2>Moving the HEAD</h2>
+						<pre class="fragment"><code data-trim contenteditable class="bash">
+(master) $ git checkout HEAD^  # parent commit
+(fc8a3b) $
+						</code></pre>
+						<pre class="fragment"><code data-trim contenteditable class="bash">
+(master) $ git checkout HEAD~1  # equivalent
+(fc8a3b) $
+						</code></pre>
+						<img class="fragment" src="images/Think-of-the-Newbies.png" alt="There ought to be only one way to do it!">
+					</section>
+
+					<section>
+						<h2>Checkout vs. Reset</h2>
+						<blockquote class="fragment">
+							<p>
+								&ldquo;&hellip;update HEAD to set the specified branch as the current branch.&rdquo;
+							</p>
+							<p class="attribution">
+								—<code>git help checkout</code>
+							</p>
+						</blockquote>
+						<blockquote class="fragment">
+							<p>
+								&ldquo;&hellip;set the current branch head (HEAD) to &lt;commit&gt;&hellip;&rdquo;
+							</p>
+							<p class="attribution">
+								—<code>git help reset</code>
+							</p>
+						</blockquote>
+					</section>
+
+					<section>
+						<h2>Pointers are Hard!</h2>
+						<pre class="fragment"><code data-trim contenteditable class="bash">
+(master) $ git reset --hard HEAD~1
+# changes what master points to!
+(master) $ nooooooooooooo!! what was my hash!?
+> command not found
+						</code></pre>
+						<pre class="fragment"><code data-trim contenteditable class="bash">
+(master) $ git reflog
+> 2e22821 HEAD@{0}: reset: moving to HEAD~1
+> 62fb09e HEAD@{1}: checkout: moving from 69a077 to master
+(master) $ git reset --hard 62fb09e  # fixed!
+						</code></pre>
+					</section>
+				</section>
+
+				<section>
+					<section>
+						<h2>Staging and Committing</h2>
+						<img src="images/Staging.jpg" alt="Staging">
+					</section>
+
+					<section>
+						<h2>A Tale of Two Directories</h2>
+						<ul>
+							<li><strong>Working tree:</strong> The physical directory you've <code>cd</code>-ed to, and everything in it.</li>
+							<ul class="fragment">
+								<li>Except the <code>.git</code> directory.</li>
+								<li class="fragment">FOR THE SAKE OF ALL THAT IS GOOD AND HOLY, DO NOT TOUCH <code>.git</code>!!!</li>
+								<ul class="fragment">
+									<li>Unless you're editing <code>.git/config</code>. That's cool. </li>
+								</ul>
+							</ul>
+							<li class="fragment"><strong>Index:</strong> Also known as the <em>staging area</em>. This is everything that will be in the next commit.</li>
+						</ul>
+					</section>
+
+					<section>
+						<h2>Make New Commits, But Keep The Old</h2>
+						<pre><code data-trim contenteditable class="bash">
+(7e8fcg) $ git add README.md
+# stage the current state of README.md
+(7e8fcg*) $ git commit
+# create a new commit with that one difference
+(89a2bd) $
+						</code></pre>
+						<p>PSA: Life's too short to use <code>git add &lt;file&gt;.</code></p>
+					</section>
+
+					<section>
+						<h2>All the World's Staged</h2>
+						<pre><code data-trim contenteditable class="bash">
+(master*) $ git add -A
+# stage every indexed file in the working directory
+(master*) $ git commit
+(master) $
+						</code></pre>
+						<ul>
+							<li class="fragment">This won't stage any files in the <code>HEAD</code>'s <code>.gitignore</code>. Then Git's like, "Changes? I don't see any changes!"</li>
+							<li class="fragment">Likewise if you've done something crazy like <code>git update-index --assume-unchanged &lt;file&gt;</code>.</li>
+						</ul>
+						<pre class="fragment"><code data-trim contenteditable class="bash">
+(master*) $ git commit -a
+# equivalent to the above in just one step
+(master) $
+						</code></pre>
+					</section>
+
+					<section>
+						<h2>You Only Live Once</h2>
+						<img src="images/YOLO.png" alt="YOLO alias">
+					</section>
+
+					<section>
+						<h2>Unstaging</h2>
+						<pre><code data-trim contenteditable class="bash">
+(master*) $ git reset HEAD README.md
+# unstage, don't change the working directory
+						</code></pre>
+						<pre class="fragment"><code data-trim contenteditable class="bash">
+(master*) $ git checkout HEAD -- README.md
+# unstage and restore the HEAD version of README.md
+						</code></pre>
+						<ul>
+							<li class="fragment">
+								Why does <code>git checkout -- README.md</code> restore the HEAD version of <code>README.md</code> if it's unstaged, but has no effect if it's staged?
+							</li>
+							<li class="fragment">
+								Because the <code>git checkout</code> defaults to using the <em>index</em>.
+							</li>
+						</ul>
+					</section>
+
+					<section>
+						<h2>What Have I Done?</h2>
+						<pre><code data-trim contenteditable class="bash">
+(master*) $ git status
+						</code></pre>
+						<pre class="fragment"><code data-trim contenteditable class="bash">
+(master*) $ git diff  # show unstaged changes
+						</code></pre>
+						<pre class="fragment"><code data-trim contenteditable class="bash">
+(master*) $ git diff --cached  # show staged changes
+						</code></pre>
+						<pre class="fragment"><code data-trim contenteditable class="bash">
+$ alias what-am-i-about-to-commit "git diff --cached"
+						</code></pre>
+					</section>
+
+					<section>
+						<h2>Pro Tip: Verbose Commit</h2>
+						<pre><code data-trim contenteditable class="bash">
+(master*) $ git commit --verbose
+						</code></pre>
+						<img src="images/Verbose-Commit.png" alt="Editing a commit in verbose mode" class="fragment">
+					</section>
+				</section>
+
+				<section>
+					<section>
+						<h2>Communicating with Remotes</h2>
+						<img src="images/Remotes.jpg" alt="Remotes">
+					</section>
+
+					<section>
+						<h2>Managing Remotes</h2>
+						<pre><code data-trim contenteditable class="bash">
+(master) $ git remote  # use --verbose to see URLs
+origin
+						</code></pre>
+						<pre class="fragment"><code data-trim contenteditable class="bash">
+(master) $ git remote add other git://github.com/otherguy/project.git
+						</code></pre>
+						<pre class="fragment"><code data-trim contenteditable class="bash">
+(master) $ git remote rm other
+						</code></pre>
+					</section>
+
+					<section>
+						<h2>Tracking Branches</h2>
+						<pre><code data-trim contenteditable class="bash">
+(master) $ git branch
+master
+						</code></pre>
+						<pre class="fragment"><code data-trim contenteditable class="bash">
+(master) $ git branch -r
+origin/master
+origin/feature
+						</code></pre>
+						<pre class="fragment"><code data-trim contenteditable class="bash">
+(master) $ git branch feature origin/feature
+						</code></pre>
+						<p class="fragment"><code>feature</code> is now tracking <code>origin/feature</code>.</p>
+					</section>
+
+					<section>
+						<h2>Pull vs. Fetch</h2>
+						<pre><code data-trim contenteditable class="bash">
+(master) $ git fetch origin  # update origin/x branches
+						</code></pre>
+						<pre class="fragment"><code data-trim contenteditable class="bash">
+(master) $ git pull origin   # for each origin/x branch, update and merge into x
+						</code></pre>
+					</section>
+
+					<section>
+						<h2>My Favorite Aliases</h2>
+						<pre><code data-trim contenteditable class="bash">
+alias ggpull="git pull origin $(current_branch)"
+alias ggpush="git push origin $(current_branch)"
+						</code></pre>
+					</section>
+				</section>
+
+				<section>
+					<section>
+						<h2>What's a Merge, Really?</h2>
+						<img src="images/Git-Merge.png" alt="An overly complicated git diagram">
+					</section>
+
+					<section>
+						<h2>The Simple Case</h2>
+						<pre>
+		1--2--+         master
+		      |
+		      3--4      feature
+						</pre>
+						<pre class="fragment"><code data-trim contenteditable class="bash">
+(master) $ git merge feature
+						</code></pre>
+						<pre class="fragment">
+		1--2--3--4      master
+						</pre>
+						<p class="fragment">This is a fast-forward. <strong>Don't do this.</strong></p>
+					</section>
+
+					<section>
+						<h2>The Simple Case, Redux</h2>
+						<pre>
+		1--2--+         master
+		      |
+		      3--4      feature
+						</pre>
+						<pre><code data-trim contenteditable class="bash">
+(master) $ git merge --no-ff feature
+						</code></pre>
+						<pre>
+		1--2--+-----5   master
+		      |     |
+		      3--4--+
+						</pre>
+						<p>5 is a merge commit. Merge commits are your friend, because you can revert them in one command:<br><code>git revert -m 1 &lt;commit&gt;</code></p>
+					</section>
+
+					<section>
+						<h2>The Complicated Case</h2>
+						<pre>
+		1--2--3--4   master
+		   |
+		   +--5--6   feature
+						</pre>
+						<pre class="fragment"><code data-trim contenteditable class="bash">
+(master) $ git merge feature
+						</code></pre>
+						<pre class="fragment">
+		      3--4
+		      |  |
+		1--2--+  +--7   master
+		      |  |
+		      5--6
+						</pre>
+						<p class="fragment">This is a <strong>three-way merge</strong>.<br>The three "ways" are commits 4, 6, and 2.</p>
+					</section>
+
+					<section>
+						<h2>Two Parents!?</h2>
+						<pre class="fragment">
+		      3--4
+		      |  |
+		1--2--+  +--7   master
+		      |  |
+		      5--6
+						</pre>
+						<p class="fragment">Commit 7 is a merge commit with two parents. The one that was originally on master (commit 4) gets to be the first parent.</p>
+						<pre class="fragment"><code data-trim contenteditable class="bash">
+(commit7) $ git checkout HEAD^
+(commit4) $
+						</code></pre>
+						<pre class="fragment"><code data-trim contenteditable class="bash">
+(commit7) $ git checkout HEAD^2
+(commit6) $
+						</code></pre>
+					</section>
+
+					<section>
+						<h2>The Wrong Way To Log</h2>
+						<pre><code data-trim contenteditable class="bash">
+(master) $ git log
+						</code></pre>
+						<img class="fragment" src="images/Git-Log.png" style="max-height:60%" alt="git log">
+						<pre class="fragment"><code data-trim contenteditable class="bash">
+(master) $ git checkout HEAD~2
+(d2e7d2) $ WTF? The log said this was 3 commits ago!!
+> command not found
+						</code></pre>
+					</section>
+
+					<section>
+						<h2>The Pretty Way To Log</h2>
+						<pre class="fragment"><code data-trim contenteditable class="bash">
+(master) $ git log --graph
+						</code></pre>
+						<img class="fragment" src="images/Git-Log-Graph.png" alt="git log --graph" style="max-height:60%">
+					</section>
+
+					<section>
+						<h2>The Right Way To Log</h2>
+						<pre class="fragment"><code data-trim contenteditable class="bash">
+(master) $ git log --first-parent
+						</code></pre>
+						<img class="fragment" src="images/Git-Log-Firstparent.png" alt="git log --first-parent" style="max-height:60%">
+					</section>
+				</section>
+
+				<section>
+					<section>
+						<h2>Enter Rebase</h2>
+						<img src="images/All-Your-Rebase.jpg" alt="All Your Rebase Are Belong To Us">
+					</section>
+
+					<section>
+						<h2>Rewriting History</h2>
+						<pre>
+		1--2--3--4      master
+		   |
+		   +--5--6      feature
+						</pre>
+						<pre class="fragment"><code data-trim contenteditable class="bash">
+(feature) $ git rebase master
+						</code></pre>
+						<pre class="fragment">
+		1--2--3--4        master
+		   |
+		   +--3--4--7--8 feature
+						</pre>
+						<p class="fragment">
+							Commits 7 and 8 are copies of commits 5 and 6 with different ancestries and commit timestamps.
+						</p>
+					</section>
+
+					<section>
+						<h2>The Awesomest Git Command Ever</h2>
+						<pre>
+		1--2--3--4      master
+		   |
+		   +--5--6      feature
+						</pre>
+						<pre class="fragment"><code data-trim contenteditable class="bash">
+(feature) $ git rebase -i master
+						</code></pre>
+						<pre class="fragment"><code data-trim contenteditable class="bash">
+pick f8fcfe4 Add icons
+pick b2a339f Fix typo
+
+# Commands:
+#  p, pick = use commit
+#  r, reword = use commit, but edit the commit message
+#  e, edit = use commit, but stop for amending
+#  s, squash = use commit, but meld into previous commit
+#  f, fixup = like "squash", but discard this commit's log message
+#  x, exec = run command (the rest of the line) using shell
+#
+# These lines can be re-ordered; they are executed from top to bottom.
+#
+# If you remove a line here THAT COMMIT WILL BE LOST.
+						</code></pre>
+					</section>
+
+					<section>
+						<h2>Pro Tip: Rebase on Pull</h2>
+						<pre><code data-trim contenteditable class="bash">
+$ git config --global pull.rebase true
+						</code></pre>
+						<ul>
+							<li>
+								No more superfluous merge commits on pull!
+							</li>
+							<li class="fragment">
+								<strong>Caution:</strong> If there are conflicts, abort! Use<br><code>git pull --no-rebase</code> to override the default.
+							</li>
+						</ul>
+					</section>
+				</section>
+
+				<section>
+					<section>
+						<h2>More Tools</h2>
+						<img src="images/More-Tools.jpg" alt="The world's biggest Swiss Army knife">
+					</section>
+
+					<section>
+						<h2>Fix Your Last Commit</h2>
+						<pre><code data-trim contenteditable class="bash">
+(master) $ git commit -m "Lame commit message"
+(master) $ git commit --amend
+						</code></pre>
+						<pre class="fragment"><code data-trim contenteditable class="bash">
+(master*) $ git commit -m "Oops, forgot to add README.md"
+(master) $ git add README.md
+(master) $ git commit --amend
+						</code></pre>
+					</section>
+
+					<section>
+						<h2>Track Down Bugs with Bisect</h2>
+						<pre><code data-trim contenteditable class="bash">
+(master) $ git bisect start  # There's a bug!
+(master) $ git bisect bad    # It's on master!
+						</code></pre>
+						<pre class="fragment"><code data-trim contenteditable class="bash">
+(master) $ git checkout HEAD~64
+(f8b451) $ git bisect good   # This commit doesn't have the bug!
+						</code></pre>
+						<pre class="fragment"><code data-trim contenteditable class="bash">
+(b8cfas) $ git bisect reset  # Bad commit found. Now let's fix it.
+						</code></pre>
+					</section>
+
+					<section>
+						<h2>Copy Commits with cherry-pick</h2>
+						<pre><code data-trim contenteditable class="bash">
+(feature) $ git commit -m "Fix typo"
+> [feature d6b849c] Fix typo
+						</code></pre>
+						<pre class="fragment"><code data-trim contenteditable class="bash">
+(feature) $ git checkout master
+(master) $ git cherry-pick d6b849c
+> [master 288c050] Fix typo
+						</code></pre>
+						<p class="fragment">
+							The hashes will always be different because the committer timestamp (and perhaps the commiter name) are different.
+						</p>
+					</section>
+
+					<section>
+						<h2>Stash Changes</h2>
+						<pre><code data-trim contenteditable class="bash">
+(feature*) $ git stash
+(feature) $ git checkout master
+(master) $ git stash pop
+						</code></pre>
+						<pre class="fragment"><code data-trim contenteditable class="bash">
+(feature) $ git stash show  # what-all do I have stashed?
+						</code></pre>
+						<pre class="fragment"><code data-trim contenteditable class="bash">
+(feature) $ git stash --keep-index  # leave everything that's going in to the next commit
+						</code></pre>
+						<pre class="fragment"><code data-trim contenteditable class="bash">
+(feature) $ git stash --include-untracked
+						</code></pre>
+					</section>
+
+					<section>
+						<h2>Show Only Unmerged Commits</h2>
+						<pre><code data-trim contenteditable class="bash">
+(feature) $ git log HEAD ^master  # show every commit in feature that's not in master
+						</code></pre>
+						<p class="fragment"><strong>Note:</strong> <code>git log</code> == <code>git log HEAD</code>, but <code>git log ^master</code> won't show any commits.</p>
+					</section>
+				</section>
+
+				<section>
+					<section>
+						<h2>More Resources</h2>
+						<ul>
+							<li><a href="http://gitimmersion.com/">Git Immersion</a> - A hands-on tutorial</li>
+							<li><a href="http://git-scm.com/book">Pro Git</a> - A free online reference</li>
+							<li><a href="http://shop.oreilly.com/product/0636920022862.do">Version Control with Git</a> - An excellent O'Reilly book</li>
+						</ul>
+					</section>
+
+					<section>
+						<h2>What About GitHub!?</h2>
+						<ul>
+							<li><a href="https://www.google.com/url?sa=t&amp;rct=j&amp;q=&amp;esrc=s&amp;source=web&amp;cd=3&amp;cad=rja&amp;ved=0CDwQtwIwAg&amp;url=http%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DFoz9yvMkvlA&amp;ei=wzfUUfq3Da3W0gHNo4HgCA&amp;usg=AFQjCNEovlF1_BEQ8d-4iKSpJMzTNwDFLQ&amp;sig2=_dOBpiq33_nQ5S_4i-0jHw&amp;bvm=bv.48705608,d.dmQ">Git and GitHub Secrets</a> — Awesome talk by Zack Holman</li>
+						</ul>
+					</section>
+				</section>
+
+				<section>
+					<h1>You Are All Beautiful In Your Own Way</h1>
+					<h3>Thanks for listening!</h3>
+				</section>
+
+			</div>
+
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.min.js"></script>
+
+		<script>
+
+			// Full list of configuration options available here:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+				transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+				// Optional libraries used to extend on reveal.js
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+					{ src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+					// { src: 'plugin/search/search.js', async: true, condition: function() { return !!document.body.classList; } }
+					// { src: 'plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>
