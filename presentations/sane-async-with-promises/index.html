@@ -1,0 +1,510 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>JavaScript Promises: A Sane Approach to Async Code</title>
+
+		<meta name="author" content="Trevor Burnham">
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<link rel="stylesheet" href="css/reveal.min.css">
+		<link rel="stylesheet" href="css/theme/default.css" id="theme">
+
+		<!-- For syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- If the query includes 'print-pdf', use the PDF print sheet -->
+		<script>
+			document.write( '<link rel="stylesheet" href="css/print/' + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">' );
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+
+				<section>
+					<h1>JavaScript Promises:<br>A Sane Approach to Async Code</h1>
+					<p style="text-align: center;">
+						<small>Presented by <a href="https://twitter.com/trevorburnham">@trevorburnham</a><br>at Mobile+Web DevConf 2013</small>
+					</p>
+				</section>
+
+				<section>
+					<section>
+						<h2>Who’s This Guy?</h2>
+						<ul>
+							<li>6'1", 150lbs</li>
+							<li class="fragment">Aries</li>
+							<li class="fragment">INTJ</li>
+							<li class="fragment">Book author</li>
+							<li class="fragment">JS dev at HubSpot</li>
+						</ul>
+					</section>
+
+					<section>
+						<h2>Book #1</h2>
+						<img src="images/CoffeeScript book.jpg" alt="CoffeeScript book" style="max-height: 70%">
+						<p style="text-align: center; font-size: 90%">
+							<a href="http://pragprog.com/book/tbcoffee/coffeescript">CoffeeScript: Accelerated JavaScript Development</a>
+						</p>
+					</section>
+
+					<section>
+						<h2>Book #2</h2>
+						<img src="images/Async JavaScript book.jpg" alt="Async JavaScript book" style="max-height: 70%">
+						<p style="text-align: center; font-size: 90%">
+							<a href="http://pragprog.com/book/tbajs/async-javascript">Async JavaScript: Build More Responsive Apps with Less Code</a>
+						</p>
+					</section>
+
+					<section>
+						<h2>Book #3</h2>
+						<img src="images/npm book.png" alt="npm book" style="max-height: 70%">
+						<p style="text-align: center; font-size: 90%">
+							<a href="https://leanpub.com/npm">The npm Book: The Essential Guide to the Node Package Manager</a>
+						</p>
+					</section>
+
+					<section>
+						<h2>We're Hiring!</h2>
+						<img src="images/HubSpot logo.png" alt="HubSpot" style="background: none; border: none; box-shadow: none; margin: 50px 0">
+						<p style="text-align: center; font-size: 90%">
+							<a href="http://dev.hubspot.com/refer-a-friend">Refer a friend, make $30,000</a>
+						</p>
+					</section>
+				</section>
+
+				<section>
+					<h2>Stuff We’ll Cover</h2>
+					<ul>
+						<li>Why do you need Promises?</li>
+						<li class="fragment">How do you use Promises?</li>
+						<li class="fragment"><em>How did you ever live without Promises?</em></li>
+					</ul>
+				</section>
+
+				<section>
+					<section>
+						<h2>The Trouble with Callbacks: Part 1</h2>
+						<pre><code data-trim contenteditable class="javascript">
+// Send score to server, give callback the rankings it returns
+function submitPlayerScore(score, onSuccess, onError) {
+	post('/score', score, {
+		success: onSuccess,
+		error: onError
+	});
+}
+						</code></pre>
+					</section>
+
+					<section>
+						<h2>The Trouble with Callbacks: Part 2</h2>
+						<pre><code data-trim contenteditable class="javascript">
+// Send score to server, show score animation, invoke callback
+// with rankings when the animation and network call both complete
+function submitPlayerScore(score, onSuccess, onError) {
+	var animationCompleted, rankings;
+	post('/score', score, {
+		success: function(data) {
+			rankings = data;
+			if (animationCompleted) onSuccess(rankings);
+		},
+		error: onError
+	});
+	startScoreAnimation(function() {
+		animationCompleted = true;
+		if (rankings) onSuccess(rankings);
+	});
+}
+						</code></pre>
+					</section>
+
+					<section>
+						<h2>The Trouble with Callbacks: Part 3</h2>
+						<pre><code data-trim contenteditable class="javascript">
+// Get auth token, send score and token to server, show score
+// animation, invoke callback with rankings when that's all done
+function submitPlayerScore(score, onSuccess, onError) {
+	var animationCompleted, rankings;
+	get('/token', {
+		success: function(token) {
+			post('/score', {token: token, score: score}, {
+				success: function(data) {
+					rankings = data;
+					if (animationCompleted) onSuccess(rankings);
+				},
+				error: onError
+			});
+		},
+		error: onError
+	});
+	startScoreAnimation(function() {
+		animationCompleted = true;
+		if (rankings) onSuccess(rankings);
+	});
+}
+						</code></pre>
+					</section>
+
+					<section>
+						<h2>Meanwhile, in a multi-threaded language...</h2>
+						<pre><code data-trim contenteditable class="javascript">
+function submitPlayerScore(score) {
+	scoreAnimation.start();
+	var token = get('/token');
+	var data = {token: token, score: score};
+	var rankings = post(data, '/score');
+
+	// Wait for animation to complete
+	while (!scoreAnimation.isComplete) {
+		Thread.sleep(0);
+	}
+	return rankings;
+}
+						</code></pre>
+					</section>
+
+					<section>
+						<h2>But Threads Have Their Own Problems</h2>
+						<img src="images/Thread problems.png" alt="The trouble with threads">
+					</section>
+
+					<section>
+						<h2>Threads? Where we're going,<br>we don't need "threads"</h2>
+						<img src="images/Promises A+ logo.png" alt="Promises logo">
+						<p style="text-align: center; font-size: 90%">
+							<a href="https://github.com/promises-aplus/promises-spec">https://github.com/promises-aplus/promises-spec</a>
+						</p>
+					</section>
+				</section>
+
+				<section>
+					<section>
+						<h2>Promises in the Abstract: Part 1 </h2>
+						<p>
+							Instead of doing this&hellip;
+						</p>
+
+						<pre><code data-trim contenteditable class="javascript">
+myLameFunction(myCallback);  // ugh, so 1995
+						</code></pre>
+
+						<p>
+							&hellip;you can do this&hellip;
+						</p>
+
+						<pre><code data-trim contenteditable class="javascript">
+myGreatPromise = myAwesomeFunction();
+						</code></pre>
+
+
+						<div class="fragment">
+							<p>
+								&hellip;and then all of this:
+							</p>
+
+							<pre><code data-trim contenteditable class="javascript">
+myGreatPromise.then(myCallback); 	    // add callbacks later
+myGreatPromise.then(myExtraCallback);  	    // stack ∞ callbacks
+myGreatPromise.then(null, myErrorHandler);  // reuse error logic
+							</code></pre>
+						</div>
+					</section>
+
+					<section>
+						<h2>Promises in the Abstract: Part 2</h2>
+						<p>
+							A Promise represents a task (usually async) that can either succeed or fail. In Promise-ese, we say that the task was either <em>fulfilled</em>* or <em>rejected</em>.
+						</p>
+
+						<pre><code data-trim contenteditable class="javascript">
+aBeautifulPromise.then(
+	function() { /* This runs if the Promise is fulfilled... */ },
+	function() { /* ...and this runs if the Promise is rejected */ }
+);
+						</code></pre>
+
+						<p><small>*In jQuery, Promises are said to be <em>resolved</em> on success. But the Promises/A+ spec uses the word “resolved” to mean “either fulfilled or rejected,” and Promises/A+ is awesome.</small></p>
+					</section>
+
+					<section>
+						<h2>Promises in the Abstract: Part 3</h2>
+						<ul>
+							<li>
+								A Promise that's neither fulfilled nor rejected is <em>pending.</em>
+							</li>
+							<li class="fragment">
+								A Promise's state can only change in two ways:
+								<ul>
+									<li><strong>pending</strong> → <strong>fulfilled</strong></li>
+									<li><strong>pending</strong> → <strong>rejected</strong></li>
+								</ul>
+							</li>
+							<li class="fragment">
+								In short, a Promise can only be fulfilled or rejected once.
+							</li>
+							<li class="fragment">
+								Just as a function can only return or throw an exception!
+							</li>
+						</ul>
+					</section>
+
+					<section>
+						<h2>The Tao of Promises</h2>
+						<blockquote cite="https://gist.github.com/domenic/3889970">
+							&ldquo;The thing is, promises are <em>not</em> about callback aggregation. That’s a simple utility. Promises are about something much deeper, namely providing a direct correspondence between synchronous functions and asynchronous functions.&rdquo;
+						</blockquote>
+						<p style="text-align: right">—<a href="https://gist.github.com/domenic/3889970">You’re Missing the Point of Promises</a>,<br />by @domenic</p>
+					</section>
+				</section>
+
+				<section>
+					<section>
+						<h2>Chaining Promises</h2>
+						<p>
+							The real magic of Promises is that you can chain them to represent a series of async tasks:
+						</p>
+
+						<pre><code data-trim contenteditable class="javascript">
+// Perform three async tasks sequentially
+function RunThreeTasks() {
+	var task1 = startTask1();
+	var task2 = task1.then(startTask2);
+	var task3 = task2.then(startTask3);
+	return task3;
+}
+						</code></pre>
+
+						<p>
+							The Promise returned by <code>RunThreeTasks</code> is fulfilled only when all three tasks have succeeded, and rejected if any of the tasks fails.
+						</p>
+					</section>
+
+					<section>
+						<h2>Chaining: How Does it Work?</h2>
+
+						<p style="text-align: center"><a href="https://github.com/promises-aplus/promises-spec">https://github.com/promises-aplus/promises-spec</a></p>
+
+						<pre style="margin-top: 30px; margin-bottom: 30px;"><code data-trim contenteditable class="javascript">
+var after = before.then(onFulfilled, onRejected);
+						</code></pre>
+
+						<p><code>after</code> starts in a <code>pending</code> state. If <code>before</code> is fulfilled:</p>
+
+						<ol>
+							<li>If <code>onFulfilled</code> is not a function, <code>after</code> is fulfilled with the same value as <code>before</code>.</li>
+							<li class="fragment">If <code>onFulfilled</code> returns a value (other than a Promise), <code>after</code> is fulfilled with that value.</li>
+							<li class="fragment">If <code>onFulfilled</code> throws an exception, <code>after</code> is rejected with that exception.</li>
+							<li class="fragment">If <code>onFulfilled</code> returns a Promise, <code>after</code> will do whatever that Promise does!</li>
+						</ol>
+					</section>
+
+					<section>
+						<h2>Chaining: Error Handling</h2>
+
+						<p>The same chaining rules apply to the <code>onRejected</code> handler, which means that errors cascade to the next Promise:</p>
+
+						<pre><code data-trim contenteditable class="javascript">
+// Perform three async tasks sequentially, log any error
+function RunThreeTasks() {
+	var task1 = startTask1();
+	var task2 = task1.then(startTask2);
+	var task3 = task2.then(startTask3);
+	task3.then(null, logError);
+	return task3;
+}
+						</code></pre>
+					</section>
+				</section>
+
+				<section>
+					<section>
+						<h2>Wow! Where can I get some Promises?</h2>
+						<ul>
+							<li>jQuery Promises</li>
+							<ul>
+								<li><a href="https://api.jquery.com/promise/">api.jquery.com/promise</a> - The #1 choice in jQuery-land</li>
+							</ul>
+							<li>Promises/A+</li>
+							<ul>
+								<li><a href="https://github.com/kriskowal/q">github.com/kriskowal/q</a> - The #1 choice in Node-land</li>
+								<li><a href="https://github.com/tildeio/rsvp.js">github.com/tildeio/rsvp.js</a> - The most lightweight choice</li>
+								<li><a href="https://github.com/cujojs/when">github.com/cujojs/when</a> - The speediest choice</li>
+								<li><a href="https://github.com/promises-aplus/promises-spec/blob/master/implementations.md">github.com/promises-aplus/promises-spec/blob/master/implementations.md</a></li>
+							</ul>
+						</ul>
+					</section>
+
+					<section>
+						<h2>Make Your Own Promises</h2>
+
+						<p>
+							To make a Promise that you can fulfill or reject yourself, you typically create a <em>Deferred</em> object that contains both a Promise and methods that can resolve it.
+						</p>
+
+						<p>
+							Here's an example using Q.js:
+						</p>
+
+						<pre><code data-trim contenteditable class="javascript">
+function waitJustOneSecond() {
+	var deferred = Q.defer();
+	setTimeout(function() {
+		deferred.resolve('Thanks for your patience!');
+	}, 1e3);
+	return deferred.promise;
+}
+						</code></pre>
+					</section>
+
+					<section>
+						<h2>What if I'm already using callbacks?</h2>
+
+						<p>
+							Turning a callback function into a Promise-returning function is easy!
+						</p>
+
+						<pre><code data-trim contenteditable class="javascript">
+// Invoke callback the next time the user taps the screen
+function onNextTap(callback) {
+	...
+}
+						</code></pre>
+
+						<pre class="fragment"><code data-trim contenteditable class="javascript">
+// Fulfill promise the next time the user taps the screen
+function promisifiedOnNextTap() {
+	var deferred = Q.defer();
+	onNextTap(deferred.resolve);
+	return deferred.promise;
+}
+						</code></pre>
+					</section>
+
+					<section>
+						<h2>Promises in Parallel</h2>
+
+						<p>
+							Every major Promises library comes with a function that takes a list of Promises and returns a Promise with these properties:
+						</p>
+
+						<ol>
+							<li>If all Promises that were passed are fulfilled, the returned Promise is fulfilled with those values.</li>
+							<li>If any of the Promises that were passed is rejected, the returned Promise is immediately rejected with that error.</li>
+						</ol>
+
+						<p class="fragment">jQuery calls this function <code>when()</code>.<br>Q/when/RSVP call it <code>all()</code>.</p>
+					</section>
+
+					<section>
+						<h2>Callback Trouble? Not anymore!</h2>
+
+						<pre><code data-trim contenteditable class="javascript">
+// Get auth token, send score and token to server, show score
+// animation, invoke callback with rankings when that's all done
+function submitPlayerScore(score) {
+	var getTokenPromise = get('/token');
+	var submitScorePromise = getTokenPromise.then(function(token) {
+		return post('/score', {token: token, score: score});
+	});
+	var scoreAnimationPromise = startScoreAnimation();
+
+	return Q.all([submitScorePromise, scoreAnimationPromise]);
+}
+						</code></pre>
+					</section>
+
+					<section>
+						<h2>Standardize Your Promises</h2>
+						<p>
+							jQuery doesn't recognize Promises/A+ Promises, but all of the major Promises/A+ libraries recognize jQuery Promises:
+						</p>
+						<pre><code data-trim contenteditable class="javascript">
+					standardizedPromise = Q.when(jQueryPromise);
+						</code></pre>
+						<p>
+							You can even monkey-patch jQuery (overriding <code>$.Deferred</code>) to make it return standards-compliant Promises: <a href="http://jsfiddle.net/jdiamond/ZSpJX/">http://jsfiddle.net/jdiamond/ZSpJX/</a>
+						</p>
+					</section>
+				</section>
+
+				<section>
+					<section>
+						<h2>What Have We Learned?</h2>
+						<ul>
+							<li>Promises make async code fun!!</li>
+							<li>Write your async functions to return Promises instead of (or in addition to!) a callback.</li>
+							<li class="fragment">There are lots of libraries for making Promises.</li>
+							<li class="fragment">(But please use Promises/A+.)</li>
+						</ul>
+					</section>
+
+					<section>
+						<h2>One last thing...</h2>
+						<p style="text-align: center;">
+							Promises are coming to the DOM!*
+						</p>
+						<p style="text-align: center;">
+							<a href="http://dom.spec.whatwg.org/#futures">http://dom.spec.whatwg.org/#futures</a>
+						</p>
+						<p class="fragment" style="text-align: center;"><small>*Not actually in any browsers yet...</small></p>
+					</section>
+				</section>
+
+				<section>
+					<h1>Thank You!<br>Have fun!!</h1>
+					<p style="text-align: center;">
+						<small><a href="https://twitter.com/trevorburnham">@trevorburnham</a></small>
+					</p>
+					<p class="fragment" style="text-align: center;">
+						<small>Slides: <a href="https://trevorburnham.com/presentations/sane-async-with-promises">https://trevorburnham.com/presentations/sane-async-with-promises</a></small>
+					</p>
+				</section>
+			</div>
+
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.min.js"></script>
+
+		<script>
+
+			// Full list of configuration options available here:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+				transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+				// Optional libraries used to extend on reveal.js
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.tabReplace = '    '; hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+					{ src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+					// { src: 'plugin/search/search.js', async: true, condition: function() { return !!document.body.classList; } }
+					// { src: 'plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>
