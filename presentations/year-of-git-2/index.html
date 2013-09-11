@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>My Year of Git 2</title>
+
+		<meta name="description" content="My Year of Git">
+		<meta name="author" content="Trevor Burnham">
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<link rel="stylesheet" href="css/reveal.min.css">
+		<link rel="stylesheet" href="css/theme/default.css" id="theme">
+
+		<!-- For syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- If the query includes 'print-pdf', use the PDF print sheet -->
+		<script>
+			document.write( '<link rel="stylesheet" href="css/print/' + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">' );
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<div class="slides">
+				<section>
+					<h1>Some Things I Forgot To Mention The Last Time I Spoke To You About Git </h1>
+					<p>
+						<small><a href="https://trevorburnham.com">Trevor Burnham</a> / <a href="https://twitter.com/trevorburnham">@trevorburnham</a></small>
+					</p>
+				</section>
+
+				<section id="intro">
+					<section>
+						<h2>Stuff I've Already Covered</h2>
+						<ul>
+							<li><strong>Commits are immutable. If the hashes are the same, everything is the same.</strong> The file hierarchy is the same, the commit metadata is the same, and the ancestry of that commit is the same.</li>
+							<li class="fragment" style="color: yellow">^ THIS IS ALL YOU REALLY NEED TO UNDERSTAND</li>
+							<li class="fragment">Here are the slides: <a href="http://trevorburnham.com/presentations/year-of-git/">http://trevorburnham.com/presentations/year-of-git/</a></li>
+						</ul>
+					</section>
+				</section>
+
+				<section>
+					<section>
+						<h2>Using Tags</h2>
+						<img src="images/pop-some-tags.png" alt="I'm gonna pop some tags">
+					</section>
+
+					<section>
+						<h2>Make Tags</h2>
+						<pre><code data-trim contenteditable class="bash">
+$ git tag tag-name &lt;SHA&gt;
+ContactsUI-prod
+ContactsUI-qa
+						</code></pre>
+						<p>If you don't specify a SHA, the default is <code>HEAD</code>.</p>
+					</section>
+
+					<section>
+						<h2>See Your Tags</h2>
+						<pre><code data-trim contenteditable class="bash">
+$ git tag
+ContactsUI-prod
+ContactsUI-qa
+
+$ git log ContactsUI-prod
+						</code></pre>
+					</section>
+
+					<section>
+						<h2>What Are Those Beautiful Tags!?</h2>
+						<p style="text-align: left">Our deployer automatically creates tags in a project's GitHub repo. E.g. <code>ContactsUI-qa</code> is the last commit deployed to QA and <code>ContactsUI-prod</code> is the last commit deployed to production.</p>
+					</section>
+
+					<section>
+						<h2>Download All The Tags!</h2>
+						<ul>
+							<li>You get the remote's tags automatically when you run <code>git fetch</code> or <code>git pull</code>&hellip;</li>
+							<li class="fragment">But you only get the tags that point to commits you download!</li>
+						</ul>
+					</section>
+
+					<section>
+						<img src="images/lol-wut.jpg" alt="LOL wut">
+					</section>
+
+					<section>
+						<h2>Download All The Tags!</h2>
+						<ul>
+							<li>You get the remote's tags automatically when you run <code>git fetch</code> or <code>git pull</code>&hellip;</li>
+							<li>But you only get the tags that point to commits you download!</li>
+							<li class="fragment">So use <code>git fetch --tags</code> if you want to stay up-to-date.</li>
+							<li class="fragment">Heck, why not make an alias for:<br /><code>git fetch &amp;&amp; git fetch --tags</code></li>
+						</ul>
+					</section>
+
+					<section>
+						<h2>Upload All The Tags!</h2>
+						<ul>
+							<li>You <em>don't</em> send tags to the remote automatically when you run <code>git push</code>.</li>
+						</ul>
+					</section>
+
+					<section>
+						<img src="images/lol-wut.jpg" alt="LOL wut">
+					</section>
+
+					<section>
+						<h2>Upload All The Tags!</h2>
+						<ul>
+							<li>You <em>don't</em> send tags to the remote automatically when you run <code>git push</code>.</li>
+							<li class="fragment">You could run <code>git push --tags</code> separately&hellip;</li>
+							<li class="fragment">But you'd overwrite our beautiful deployer tags!</li>
+							<li class="fragment">If you're on Git 1.8.3 (hint: <code>brew update git</code>, you can use <code>git push --follow-tags</code> to just push tags associated with the commits you're pushing. Symmetry!</li>
+						</ul>
+					</section>
+				</section>
+
+				<section>
+					<section>
+						<h2>Git Diff and the Mysterious Flags</h2>
+						<img src="images/flag.jpg" alt="Flag">
+					</section>
+
+					<section>
+						<h2>What Arguments Do I Pass To It!?</h2>
+						<ul>
+							<li>The most straightforward way to use <code>git diff</code> is to explicitly tell it which two things you want to compare:<br><code>$ git diff master feature</code></li>
+							<li class="fragment">But what if you want to do a comparison between X and the working directory?</li>
+							<li class="fragment">Or X and the index (aka the staging area)?</li>
+						</ul>
+					</section>
+
+					<section>
+						<h2>The Git Diff Rosetta Stone</h2>
+						<ul>
+							<li>Diff between the working directory and 5e4d284:<br><code>$ git diff 5e4d284</code></li>
+							<li class="fragment">Diff between the staging area and 5e4d284:<br><code>$ git diff --staged 5e4d284</code></li>
+							<li class="fragment">(<code>--staged</code> is the same as <code>--cached</code>.)</li>
+							<li class="fragment">(Since a commit is expected, the default is <code>HEAD</code>.)</li>
+							<li class="fragment">Diff between the working directory and the staging area:<br><code>$ git diff</code></li>
+						</ul>
+					</section>
+				</section>
+
+				<section>
+					<section>
+						<h2>OhNoMergeConflictWhatDoIDo!?!?</h2>
+						<img src="images/panic.jpg" alt="Panic">
+					</section>
+
+					<section>
+						<h2>Remember The ASCII Art!</h2>
+						<pre><code data-trim contenteditable class="bash">
+$ git merge feature master
+						</code></pre>
+						<pre>
+		      3--4   master
+		      |
+		1--2--+
+		      |
+		      5--6   feature
+						</pre>
+						<p style="text-align: left">Git says, "OK, I'm going to take <code>git diff 2 4</code> and <code>git diff 2 6</code>. We'll see how it goes&hellip;"</p>
+					</section>
+
+					<section>
+						<h2>No Conflict</h2>
+						<pre><code data-trim contenteditable class="bash">
+$ git merge feature master
+						</code></pre>
+						<pre>
+		      3--4
+		      |  |
+		1--2--+  +--7   master
+		      |  |
+		      5--6
+						</pre>
+						<p style="text-align: left">Git says, "Yay! <code>git diff 2 4</code> and <code>git diff 2 6</code> didn't show any <em>different changes to the same lines,</em> so I'll just concatenate the diffs and apply that as a patch to generate commit 7."</p>
+					</section>
+
+					<section>
+						<h2>Conflict!</h2>
+						<pre><code data-trim contenteditable class="bash">
+$ git merge feature master
+						</code></pre>
+						<pre>
+		      3--4
+		      |  |
+		1--2--+  +--????????
+		      |  |
+		      5--6
+						</pre>
+						<p style="text-align: left">Git says, "<code>git diff 2 4</code> and <code>git diff 2 6</code> found <em>different changes to the same lines</em>. I don't get paid enough to deal with this s**t. You figure it out."</p>
+					</section>
+
+					<section>
+						<h2>First Step</h2>
+						<img src="images/git-diff.png" alt="Keep Calm and Git Diff">
+					</section>
+
+					<section>
+						<h2>Learn From History</h2>
+						<ul>
+							<li>Want to know where these conflicting changes came from?<br><code>$ git log --merge --left-right -p</code></li>
+							<li class="fragment">The <code>--merge</code> flag shows only commits related to the current conflict.</li>
+							<li class="fragment">The <code>--left-right</code> flag prefixes SHAs with <code>&lt;</code> if they're from "our" branch, <code>&gt;</code> if they're from "their" branch.</li>
+							<li class="fragment"><code>-p</code> means you want to see SHAs, commit messages, and patches.</li>
+							<li class="fragment">You can (and probably should) also pass a file path.</li>
+						</ul>
+					</section>
+
+					<section>
+						<h2>Sanity Checking</h2>
+						<ul>
+							<li>Sometimes <code>git diff</code> isn't much help when you've saved conflict resolutions&hellip;</li>
+							<li class="fragment">So before staging a resolution, try <code>git diff --ours &lt;filepath&gt;</code> and <code>git diff --theirs &lt;filepath&gt;</code> to see if the change makes sense.</li>
+						</ul>
+					</section>
+				</section>
+
+				<section>
+					<section>
+						<h2>Bonus Tips</h2>
+						<img src="images/shave-the-yak.png" alt="Shave the yak">
+					</section>
+
+					<section>
+						<h2>Be Patient</h2>
+						<ul>
+							<li>Did you know that you can use a diffing algorithm of your choice? It's true!</li>
+							<li class="fragment">The alternative that a lot of hipsters (and Linux core devs) are using these days is called <code>patience</code>. You can read about it at:<br><a href="http://alfedenzo.livejournal.com/170301.html">http://alfedenzo.livejournal.com/170301.html</a></li>
+							<li class="fragment">If you're on git 1.8.2+, you can set it as your default:<br><code>git config --global diff.algorithm patience</code></li>
+						</ul>
+					</section>
+
+					<section>
+						<h2>Git Clean</h2>
+
+						<ul>
+							<li>You can delete all files Git <em>isn't</em> tracking in your repo dir using <code>git clean</code>.</li>
+							<li class="fragment">To delete untracked directories as well:<br><code>git clean -d</code>.</li>
+							<li class="fragment">To just see what would be deleted:<br><code>git clean --dry-run</code>.</li>
+							<li class="fragment">From <a href="https://git.hubteam.com/gist/1133">my .gitconfig</a>:</code><br><pre><code data-trim contenteditable class="bash">
+# I don't need to type '-f' every time. I'm an adult!
+[clean]
+  requireForce = false
+						</code></pre></li>
+						</ul>
+					</section>
+				</section>
+
+				<section>
+					<h1>You Are All Marvels of Nature</h1>
+					<h3>Thanks for listening!</h3>
+				</section>
+
+			</div>
+
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.min.js"></script>
+
+		<script>
+
+			// Full list of configuration options available here:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+				transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+				// Optional libraries used to extend on reveal.js
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+					{ src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+					// { src: 'plugin/search/search.js', async: true, condition: function() { return !!document.body.classList; } }
+					// { src: 'plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>
