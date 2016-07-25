@@ -1,0 +1,16 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>302 resource test</title>
+    <link href="http://trevorburnham.com/302-test/styles.css" rel="stylesheet">
+    <link href="https://httpbin.org/redirect-to?url=http://trevorburnham.com/302-test/styles.css" rel="stylesheet">
+  </head>
+  <body>
+    <h1>302 resource test</h1>
+    <p>
+      This page tests what happens when the browser requests a resource that
+      turns out to be a 302 response to an already-fetched resource. Ideally
+      the 302 response would not trigger an additional request.
+    </p>
+  </body>
+</html>
