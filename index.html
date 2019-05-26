@@ -1,57 +1,104 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Trevor Burnham: Web Developer, Author, Speaker</title>
-    <meta name="description" content="Home of Trevor Burnham, web developer." />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-    <script type="text/javascript" src="//use.typekit.net/ucp2uks.js"></script>
-    <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
-    <link rel="stylesheet" type="text/css" media="all" href="css/style.css" />
-  </head>
+
+<head>
+  <meta charset="utf-8">
+  <title>Trevor Burnham: Author of Test-Driven React</title>
+  <link rel="icon" href="favicon.png" type="image/png">
+  <meta name="description" content="Home page of Trevor Burnham, software engineer">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Bangers|Oswald">
+</head>
+
 <body>
-  <div class="header-wrapper">
-    <header>
+  <header>
+    <div class="flex-center">
       <h1>Trevor Burnham</h1>
-      <ul class="social-media">
-        <li>
-          <a href="//github.com/trevorburnham" class="github">
-            GitHub
-          </a>
-        </li><li>
-          <a href="//twitter.com/trevorburnham" class="twitter">
-            Twitter
-          </a>
-        </li><li>
-          <a href="//facebook.com/trevor.burnham" class="facebook">
-            Facebook
-          </a>
-        </li>
-      </ul>
-    </header>
-  </div>
+    </div>
+  </header>
 
-  <article>
-    <h2>Books</h2>
-    <ul class="books">
-      <li>
-        <a href="//pragprog.com/book/tbcoffee/coffeescript" class="coffeescript">
-          CoffeeScript: Accelerated JavaScript Development
-        </a>
-      </li><li>
-        <a href="//pragprog.com/book/tbajs/async-javascript" class="async-javascript">
-          Async JavaScript: Build More Responsive Apps with Less Code
-        </a>
-      </li><li>
-        <a href="//leanpub.com/npm" class="npm">
-          The npm Book: The Essential Guie to the Node Package Manager
-        </a>
-      </li>
-    </ul>
-  </article>
+  <a name="bio"></a>
+  <section class="bio">
+    <div class="bio-column">
+      <h2 class="sr-only">About me</h2>
+      <div class="flex-center">
+        <img class="avatar-image" src="images/Trevor_Burnham_meets_Chewbacca.jpg" loading="lazy" />
+      </div>
+      <p>
+        Hi! <span role="img">👋🏻</span> I’m Trevor Burnham, author of several books on
+        JavaScript, most recently <a href="//pragprog.com/book/tbreact/test-driven-react">
+          Test-Driven React
+        </a> (2019). Currently I’m working as a frontend engineer at <a href="//hubspot.com">HubSpot</a> in Cambridge,
+        MA. My
+        areas of
+        expertise run the gamut
+        from <abbr title="user experience">UX</abbr> to <abbr title="accessibility">a11y</abbr> to reliability and
+        performance. I <span role="img" aria-label="love">❤️</span> making web apps better.
+      </p>
 
-  <footer>
-    <p>Questions? <a href="mailto:trevorburnham@gmail.com">E-mail me</a>.</a></p>
-  </footer>
+      <p>You can follow me on <span role="img">🐦</span> <a href="//twitter.com/trevorburnham">Twitter</a>, peruse my
+        résumé on <span role="img">👔</span> <a href="//linkedin.com/in/trevorburnham/">LinkedIn</a>, and check out my
+        open-source
+        work on <span role="img">🐙</span> <a href="//github.com/trevorburnham">GitHub</a>.</p>
+
+      <p>If you have a
+        project I might
+        be
+        interested in, <span role="img">📬</span> <a href="mailto:trevorburnham@gmail.com">email me</a>.</p>
+    </div>
+  </section>
+
+  <a name="book"></a>
+  <section class="book">
+    <h2 class="sr-only">About Test-Driven React</h2>
+    <div class="book-column">
+      <div class="flex-columns">
+        <div class="flex-column">
+          <a href="//pragprog.com/book/tbreact/test-driven-react"><img class="book-image"
+              src="images/Test-Driven_React.jpg" loading="lazy" /></a></div>
+        <div class="flex-column book-quotes">
+          <blockquote>A great hands-on introduction to the latest technologies in front-end development.</blockquote>
+          <cite>Ludovico Fischer, author of <a href="//pragprog.com/book/lfreact/react-for-real">React for
+              Real</a></cite>
+          <blockquote>An amazing timesaver for those entering the world of modern JavaScript.</blockquote>
+          <cite>Stefan Turalski, BNP Paribas</cite>
+          <blockquote>An incredibly comprehensive guide to improving the testing and development workflows of React
+            developers at any experience level.</blockquote>
+          <cite>Adam Markon, HubSpot</cite>
+        </div>
+      </div>
+      <blockquote class="excerpt">The spirit of test-driven development extends beyond writing tests before you write
+        code. The goal is to set up a constructive feedback loop for yourself, to identify potential problems quickly
+        and give yourself
+        the freedom to explore potential improvements. Tests are only a means to that end. Sometimes, you’ll want to set
+        tests aside and focus on other sources of feedback. The important thing is to always think ahead: before you
+        start writing a piece of code, ask yourself what the most valuable feedback you could receive for that code
+        would be. Then take steps to make it a reality.</blockquote>
+      <blockquote class="excerpt">Every time your eyes leave your code, you experience what’s known as a context switch.
+        Returning to your code, it’s common to feel disoriented, even lost. A workflow that requires you to actively
+        switch between your code and your tests will sap your ability to focus. Strive to make running your tests as
+        automatic as breathing.</blockquote>
+      <blockquote class="excerpt">With the new code still fresh in your mind, you can experiment. Try a different
+        approach. Use cleaner syntax. Refactor. As soon as you save, the test console will tell you if your revision is
+        viable. With just a few extra minutes, you can almost always find a way to make your code better. More
+        importantly, what you learn from these little ventures will make you a better coder.</blockquote>
+      <div class="flex-center">
+        <a class="cta-link" href="//pragprog.com/book/tbreact/test-driven-react">Buy direct from PragProg</a>
+      </div>
+    </div>
+  </section>
+
+  <template id="scroll-link-template">
+    <a class="scroll-link fade-on-scroll" aria-hidden="true" tabindex="0">
+      <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100">
+        <path class="st0"
+          d="M50,5C25.1,5,5,25.1,5,50s20.1,45,45,45s45-20.1,45-45C95,25.1,74.9,5,50,5z M51.4,76.4L51.4,76.4 c-0.8,0.8-2,0.8-2.8,0l0,0l-32-32c-0.6-0.6-0.6-1.6-0.2-2.3c0,0,1.5-3.1,4.5-6.1c3-3,6.1-4.5,6.1-4.5c0.7-0.4,1.7-0.4,2.3,0.2 L50,52.3l20.7-20.7c0.6-0.6,1.6-0.6,2.3-0.2c0,0,3.1,1.5,6.1,4.5c3,3,4.5,6.1,4.5,6.1c0.4,0.7,0.4,1.7-0.2,2.3L51.4,76.4z">
+        </path>
+      </svg>
+    </a>
+  </template>
+
+  <script src="js/script.js"></script>
 </body>
+
 </html>
