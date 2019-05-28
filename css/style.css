@@ -46,8 +46,8 @@ abbr {
   text-decoration: none;
 }
 
-a:hover {
-  color: #999;
+svg {
+  fill: currentColor;
 }
 
 p {
@@ -119,11 +119,7 @@ h1::after {
   transition-duration: 300ms;
   color: #000;
   transform: scale(0.9);
-  margin: 64px 0;
-}
-
-.scroll-link:hover {
-  color: #889;
+  margin: 64px 0 128px 0;
 }
 
 /* Bio */
@@ -189,11 +185,6 @@ blockquote.excerpt {
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 
-.cta-link:hover {
-  color: #fff;
-  background: hsl(0, 92%, 45%);
-}
-
 /* Utility classes */
 
 .flex-center {
@@ -251,5 +242,21 @@ blockquote.excerpt {
 
   blockquote.excerpt {
     font-size: 28px;
+  }
+}
+
+@media (hover: hover) {
+  a:hover {
+    color: #999;
+  }
+
+  .scroll-link:hover {
+    color: inherit;
+    transform: scale(1.2)
+  }
+
+  .cta-link:hover {
+    color: #fff;
+    background: hsl(0, 92%, 45%);
   }
 }
