@@ -19,7 +19,7 @@ img {
 /* Global */
 
 body {
-  font-family: 'Oswald', sans-serif;
+  font-family: "Oswald", sans-serif;
   font-size: 28px;
   color: black;
 }
@@ -33,7 +33,7 @@ section {
 }
 
 h1 {
-  font-family: 'Bangers', cursive;
+  font-family: "Bangers", cursive;
   letter-spacing: 0.5vw;
 }
 
@@ -69,12 +69,12 @@ blockquote {
 
 blockquote::before {
   display: inline;
-  content: '“';
+  content: "“";
 }
 
 blockquote::after {
   display: inline;
-  content: '”';
+  content: "”";
 }
 
 blockquote:first-of-type {
@@ -87,7 +87,7 @@ cite {
 
 cite::before {
   display: inline;
-  content: '—';
+  content: "—";
 }
 
 .mouse-mode * {
@@ -107,7 +107,7 @@ h1 {
 
 h1::after {
   display: inline-block;
-  content: '!';
+  content: "!";
 }
 
 .scroll-link {
@@ -169,7 +169,7 @@ blockquote.excerpt {
   margin: 64px 0;
   padding: 28px 32px;
   font-family: Georgia, serif;
-  font-size: 24px;
+  font-size: 20px;
   line-height: 1.5;
   box-shadow: 0 0 0 6px hsl(0, 50%, 40%);
 }
@@ -182,7 +182,7 @@ blockquote.excerpt {
   background: hsl(0, 92%, 35%);
   color: #fff;
   text-decoration: none;
-  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
 }
 
 /* Utility classes */
@@ -252,7 +252,7 @@ blockquote.excerpt {
 
   .scroll-link:hover {
     color: inherit;
-    transform: scale(1.2)
+    transform: scale(1.2);
   }
 
   .cta-link:hover {
