@@ -137,8 +137,12 @@ h1::after {
 
 .avatar-image {
   width: 35%;
-  border-radius: 100%;
   margin: 1em 0;
+}
+
+.avatar-image > * {
+  border-radius: 100%;
+  width: 100%;
 }
 
 /* Book */
@@ -154,8 +158,8 @@ h1::after {
   margin: 64px auto;
 }
 
-.book-image {
-  max-width: 100%;
+.book-image > * {
+  width: 100%;
   filter: drop-shadow(hsl(0, 10%, 25%) 5px 5px 10px);
 }
 
