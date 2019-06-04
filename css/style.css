@@ -1,3 +1,18 @@
+/* Fonts */
+@font-face {
+  font-family: "Bangers";
+  font-style: normal;
+  font-weight: 400;
+  src: url("../fonts/Bangers.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Oswald";
+  font-style: normal;
+  font-weight: 400;
+  src: url("../fonts/Oswald.woff") format("woff");
+}
+
 /* Normalization */
 
 body,
@@ -33,7 +48,7 @@ section {
 }
 
 h1 {
-  font-family: "Bangers", cursive;
+  font-family: "Bangers", "Gill Sans", sans-serif;
   letter-spacing: 0.5vw;
 }
 
